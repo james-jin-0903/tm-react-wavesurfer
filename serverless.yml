@@ -1,0 +1,134 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: session-manage-api
+package:
+  individually: true
+custom:
+  serverless-offline:
+    useChildProcesses: true
+  splitStacks:
+    perFunction: false
+    perType: true
+    perGroupFunction: false
+  bundle:
+    ignorePackages:
+      - pg
+      - sqlite3
+      - tedious
+      - pg-hstore
+provider:
+  name: aws
+  versionFunctions: false
+  runtime: nodejs12.x
+  stage: "dev"
+  region: us-east-1
+  apiGateway:
+    shouldStartNameWithService: true
+  environment:
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Scan
+        - dynamodb:Query
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:DescribeTable
+      Resource: "arn:aws:dynamodb:us-east-1:*:*"
+functions:
+  # event-create:
+  #   handler: services/event/create.main
+  #   name: event-create
+  #   events:
+  #     - http:
+  #         path: event
+  #         method: post
+  #         cors: true
+  # event-read:
+  #   handler: services/event/read.main
+  #   name: event-read
+  #   events:
+  #     - http:
+  #         path: event/{id}
+  #         method: get
+  #         cors: true
+  # event-update:
+  #   handler: services/event/update.main
+  #   name: event-update
+  #   events:
+  #     - http:
+  #         path: event/{id}
+  #         method: put
+  #         cors: true
+  # event-delete:
+  #   handler: services/event/delete.main
+  #   name: event-delete
+  #   events:
+  #     - http:
+  #         path: event/{id}
+  #         method: delete
+  #         cors: true
+  metadata-create:
+    handler: services/metaData/create.main
+    name: metadata-create
+    events:
+      - http:
+          path: metadata
+          method: post
+          cors: true
+  metadata-read:
+    handler: services/metaData/read.main
+    name: metadata-read
+    events:
+      - http:
+          path: metadata/{id}
+          method: get
+          cors: true
+  metadata-update:
+    handler: services/metaData/update.main
+    name: metadata-update
+    events:
+      - http:
+          path: metadata/{id}
+          method: put
+          cors: true
+  metadata-delete:
+    handler: services/metaData/delete.main
+    name: metadata-delete
+    events:
+      - http:
+          path: metadata/{id}
+          method: delete
+          cors: true
+  metadata-create-update:
+    handler: services/metaData/createAndUpdate.main
+    name: metadata-create-update
+    events:
+      - http:
+          path: metadata/{id}
+          method: post
+          cors: true
+  metadata-update-global:
+    handler: services/metaData/editGlobalMetaData.main
+    name: metadata-update-global
+    events:
+      - http:
+          path: metadata-update-global
+          method: post
+          cors: true
+plugins:
+  - serverless-bundle
+  - serverless-offline
+  - serverless-offline-lambda
